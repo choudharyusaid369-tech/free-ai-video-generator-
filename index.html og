@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Free AI Video Generator</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #090d18;
+      color: white;
+    }
+
+    header {
+      padding: 22px 16px;
+      text-align: center;
+      background: #11182a;
+      border-bottom: 1px solid #263149;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 25px;
+    }
+
+    header p {
+      color: #aab5ce;
+      font-size: 14px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: #163e35;
+      color: #73f3c3;
+      font-size: 12px;
+      margin-bottom: 12px;
+    }
+
+    main {
+      max-width: 650px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    .card {
+      padding: 20px;
+      margin-bottom: 18px;
+      border-radius: 18px;
+      background: #11182a;
+      border: 1px solid #263149;
+    }
+
+    h2 {
+      font-size: 19px;
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      margin: 16px 0 8px;
+      color: #d5def1;
+      font-size: 14px;
+    }
+
+    textarea,
+    select {
+      width: 100%;
+      padding: 13px;
+      border-radius: 10px;
+      border: 1px solid #35415b;
+      background: #0b1120;
+      color: white;
+      font-size: 15px;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .hint {
+      color: #9ba8c2;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 18px;
+      padding: 15px;
+      border: none;
+      border-radius: 11px;
+      background: linear-gradient(100deg, #7657ff, #3e8bff);
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .preview {
+      min-height: 280px;
+      padding: 20px;
+      border-radius: 14px;
+      background: #080c16;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .preview-icon {
+      font-size: 55px;
+      margin-bottom: 12px;
+    }
+
+    .preview p {
+      color: #aab5ce;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    video {
+      display: none;
+      width: 100%;
+      max-height: 500px;
+      border-radius: 12px;
+      background: black;
+    }
+
+    .download {
+      display: none;
+      text-decoration: none;
+      text-align: center;
+      margin-top: 15px;
+      padding: 13px;
+      background: #163e35;
+      color: #73f3c3;
+      border-radius: 10px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px 15px;
+      color: #8591aa;
+      font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="badge">FREE PROJECT</div>
+  <h1>🎬 AI Video Studio</h1>
+  <p>Turn your imagination into video ideas.</p>
+</header>
+
+<main>
+
+  <section class="card">
+    <h2>✨ Create your video</h2>
+
+    <label for="prompt">Describe your video</label>
+
+    <textarea
+      id="prompt"
+      maxlength="2000"
+      placeholder="Example: A cute robot exploring a magical forest at sunset, cinematic lighting..."
+    ></textarea>
+
+    <p class="hint">
+      Describe the subject, location, movement, lighting,
+      and visual style you want.
+    </p>
+
+    <label for="style">Video style</label>
+
+    <select id="style">
+      <option value="Cinematic">Cinematic</option>
+      <option value="3D Animation">3D Animation</option>
+      <option value="Anime">Anime</option>
+      <option value="Realistic">Realistic</option>
+      <option value="Fantasy">Fantasy</option>
+      <option value="Cartoon">Cartoon</option>
+    </select>
+
+    <label for="ratio">Aspect ratio</label>
+
+    <select id="ratio">
+      <option value="9:16">9:16 — YouTube Shorts</option>
+      <option value="16:9">16:9 — YouTube videos</option>
+      <option value="1:1">1:1 — Square video</option>
+    </select>
+
+    <label for="duration">Target duration</label>
+
+    <select id="duration">
+      <option value="5">5 seconds</option>
+      <option value="10">10 seconds</option>
+      <option value="15">15 seconds</option>
+    </select>
+
+    <button id="generate">✨ Prepare Video Request</button>
+  </section>
+
+  <section class="card">
+    <h2>🎥 Video preview</h2>
+
+    <div class="preview" id="placeholder">
+      <div class="preview-icon">🎞️</div>
+      <strong>Your video will appear here</strong>
+      <p>
+        Enter a prompt and tap the button to prepare
+        your video-generation request.
+      </p>
+    </div>
+
+    <video id="video" controls playsinline></video>
+
+    <a id="download" class="download" download="ai-video.mp4">
+      ⬇️ Download video
+    </a>
+  </section>
+
+  <section class="card">
+    <h2>💡 How it works</h2>
+    <p class="hint">
+      1. Write a text prompt.<br><br>
+      2. Choose your visual style and aspect ratio.<br><br>
+      3. Connect a compatible AI video-generation service.<br><br>
+      4. Generate, preview, and download your video.
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  AI Video Studio · Built for creators<br>
+  Video generation requires a connected AI model.
+</footer>
+
+<script>
+  const promptInput = document.getElementById("prompt");
+  const styleInput = document.getElementById("style");
+  const ratioInput = document.getElementById("ratio");
+  const durationInput = document.getElementById("duration");
+
+  const generateButton = document.getElementById("generate");
+  const placeholder = document.getElementById("placeholder");
+
+  generateButton.addEventListener("click", function () {
+    const prompt = promptInput.value.trim();
+
+    if (!prompt) {
+      alert("Please describe the video you want to create.");
+      promptInput.focus();
+      return;
+    }
+
+    const request = {
+      prompt: prompt,
+      style: styleInput.value,
+      aspectRatio: ratioInput.value,
+      durationSeconds: Number(durationInput.value)
+    };
+
+    placeholder.style.display = "flex";
+
+    placeholder.innerHTML = `
+      <div class="preview-icon">📝</div>
+      <strong>Video request prepared!</strong>
+      <p>${escapeHTML(request.prompt)}</p>
+      <p>
+        Style: ${escapeHTML(request.style)}<br>
+        Format: ${escapeHTML(request.aspectRatio)}<br>
+        Duration: ${request.durationSeconds} seconds
+      </p>
+      <p>
+        An AI video-generation service must be connected
+        before actual video can be generated.
+      </p>
+    `;
+
+    document.getElementById("video").style.display = "none";
+    document.getElementById("download").style.display = "none";
+
+    console.log("Prepared video request:", request);
+  });
+
+  function escapeHTML(text) {
+    return text.replace(/[&<>"']/g, function (char) {
+      const entities = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      };
+
+      return entities[char];
+    });
+  }
+</script>
+
+</body>
+</html>
